@@ -1,0 +1,15 @@
+{
+  "name": "sarp-plugins",
+  "description": "Official Claude Code plugins for SARP organizational memory.",
+  "owner": {
+    "name": "Idealink"
+  },
+  "plugins": [
+    {
+      "name": "sarp-organizational-memory",
+      "source": "./plugins/sarp-organizational-memory",
+      "description": "Recall, trace, and govern organizational memory through the public SARP MCP endpoint."
+    }
+  ]
+}
+

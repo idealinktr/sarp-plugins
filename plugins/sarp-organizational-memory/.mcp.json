@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "sarp-memory": {
+      "type": "http",
+      "url": "https://mcp.getsarp.com/mcp",
+      "oauth": {
+        "scopes": "sarp:memory"
+      }
+    }
+  }
+}
+

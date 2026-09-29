@@ -1,0 +1,11 @@
+{
+  "name": "sarp-organizational-memory",
+  "description": "Use SARP's governed organizational memory from Claude Code without bypassing evidence, authority, or history.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Idealink"
+  },
+  "homepage": "https://github.com/idealinktr/sarp-plugins",
+  "repository": "https://github.com/idealinktr/sarp-plugins"
+}
+
