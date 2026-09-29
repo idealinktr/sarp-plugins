@@ -15,9 +15,14 @@ Before presenting a material organizational claim as supported:
    answer.
 5. Label uncertainty and projection warnings exactly as returned by SARP.
 
+Treat `potential-conflicts-only` and candidates without an explicit
+`contradicts` or `corrects` lineage edge as potential conflicts, not established
+contradictions. Say "potentially conflicts" or "may conflict" in that case.
+Only say that records contradict one another when SARP returns an explicit
+conflict or correction edge.
+
 Do not turn observations into facts, evidence into approval, or a governance
 request into authorization. Never claim a contradiction has been resolved
 unless SARP returns a record that establishes that resolution. Use
 `record_evidence` only when the user explicitly asks to preserve supplied
 evidence; do not fabricate source references.
-
