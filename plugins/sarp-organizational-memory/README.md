@@ -1,8 +1,8 @@
 # SARP Organizational Memory for Claude Code
 
 This Claude Code plugin connects to SARP's public remote MCP endpoint and adds
-skills for recalling organizational decisions, tracing their context, and
-grounding claims in evidence.
+skills for recalling organizational decisions, tracing their context, grounding
+claims in evidence, and recording a decision through the governed command path.
 
 SARP remains the authority for scope, governance, lineage, and history. The
 plugin supplies transport configuration and usage guidance only.
@@ -56,7 +56,7 @@ Write operations remain subject to SARP authorization and governance. The
 plugin cannot approve its own request, bypass authority, delete history, or
 write directly to storage.
 
-## Three starter prompts
+## Starter prompts
 
 ### 1. Recall a decision
 
@@ -76,6 +76,13 @@ write directly to storage.
 > decisions in SARP. Separate contradictions from unresolved context and cite
 > the returned record IDs.
 
+### 4. Record a decision
+
+> Record this decision in SARP with decisionType, selectedOption, rationale,
+> confidence, and at least one existing evidence ID. Recall standing decisions
+> and check contradictions first. Supersede an earlier decision only if I
+> confirm that this decision replaces the exact decision ID you show me.
+
 ## Verify the installation
 
 In Claude Code:
@@ -87,6 +94,31 @@ In Claude Code:
 4. Ask for a trace of one returned decision and verify that Claude calls out
    absent lineage instead of inventing it.
 
-If authentication is required again, open `/mcp` and reconnect the SARP server.
-Do not paste access or refresh tokens into a prompt, repository file, or issue.
+## Troubleshooting
+
+### Sign-in or 401
+
+A 401, or a sign-in prompt that does not finish, means Claude Code has no
+valid SARP session for `https://mcp.getsarp.com/mcp`. Open `/mcp`, select
+`plugin:sarp-organizational-memory:sarp-memory`, and complete the browser
+sign-in again. Leave access tokens and refresh tokens out of prompts,
+repository files, and issues.
+
+### Access requires a SARP account
+
+The public MCP service authenticates a SARP account and takes organization
+scope from that actor. An account outside an organization configured for the
+public MCP service cannot call these tools. Installing the plugin does not
+create an account or grant access.
+
+### Sign in again
+
+When a later call asks for authentication, open `/mcp` and reconnect
+`plugin:sarp-organizational-memory:sarp-memory` through the same browser flow.
+Reconnecting replaces the previous session. Leave tokens out of the chat.
+
+## Policies
+
+- [Privacy](https://getsarp.com/privacy)
+- [Terms](https://getsarp.com/terms)
 

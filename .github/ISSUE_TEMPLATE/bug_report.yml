@@ -1,0 +1,54 @@
+name: Bug report
+description: Report a problem installing or using the SARP organizational memory plugin.
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe what went wrong with the Claude Code plugin. Leave out access tokens, refresh tokens, organization IDs, and tenant IDs.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Include a sign-in failure or HTTP status such as 401 when you saw one.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Run /mcp and select plugin:sarp-organizational-memory:sarp-memory
+        2. Complete the browser sign-in
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: claude-version
+    attributes:
+      label: Claude Code version
+      placeholder: "2.1.281"
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      placeholder: "0.2.0"
+  - type: dropdown
+    id: sarp-account
+    attributes:
+      label: SARP account
+      description: The public MCP service requires a SARP account in an organization configured for it.
+      options:
+        - I am signed in with a SARP account
+        - I do not have a SARP account
+        - I am not sure
+    validations:
+      required: true
