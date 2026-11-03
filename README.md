@@ -31,7 +31,7 @@ derived from the signed-in actor; never place access tokens, organization IDs,
 or tenant IDs in prompts or plugin configuration.
 
 See the [plugin guide](plugins/sarp-organizational-memory/README.md) for the
-eight public tools, example prompts, and verification steps.
+public tools, example prompts, and verification steps.
 
 ## Distribution boundary
 
@@ -39,4 +39,21 @@ The files in this repository may configure a client to call SARP, but they do
 not grant authority or bypass governance. All writes pass through SARP's
 governed command path. Authorization requests cannot approve themselves, and
 superseding a decision preserves its history and lineage.
+
+## Troubleshooting
+
+A sign-in failure or HTTP 401 means the SARP session is missing or no longer
+accepted. Access requires a SARP account in an organization configured for the
+public MCP service. To sign in again, run `/mcp`, select
+`plugin:sarp-organizational-memory:sarp-memory`, and complete the browser
+flow. Leave access tokens and refresh tokens out of prompts, repository files,
+and issues.
+
+The [plugin guide](plugins/sarp-organizational-memory/README.md) has the same
+steps in more detail.
+
+## Policies
+
+- [Privacy](https://getsarp.com/privacy)
+- [Terms](https://getsarp.com/terms)
 
