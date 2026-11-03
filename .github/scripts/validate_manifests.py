@@ -159,6 +159,13 @@ def check_plugin(label, plugin, require_contact):
     license_id = plugin.get("license")
     if not isinstance(license_id, str) or SPDX.fullmatch(license_id) is None:
         status |= fail(f"{label}: license must be an SPDX identifier")
+    for key in ("privacyPolicyUrl", "termsOfServiceUrl"):
+        if key not in plugin:
+            continue
+        if not isinstance(plugin[key], str):
+            status |= fail(f"{label}: {key} must be a string")
+        else:
+            status |= check_url(f"{label} {key}", plugin[key])
     keywords = plugin.get("keywords")
     if not isinstance(keywords, list) or not keywords:
         status |= fail(f"{label}: keywords must be a non-empty array")

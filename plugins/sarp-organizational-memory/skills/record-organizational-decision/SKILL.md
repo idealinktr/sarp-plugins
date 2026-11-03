@@ -49,10 +49,20 @@ Do not call `record_decision` or `supersede_decision` until
 `evidenceReferences` has at least one ID. Do not invent an evidence ID. Do not
 leave `evidenceReferences` empty.
 
-When the user gives permission, call `record_evidence` with only the evidence
-the user supplied. Use the evidence ID SARP returns. If that call does not
-return an evidence ID, stop and ask the user. Do not fabricate a source
-reference.
+When the user gives permission, call `record_evidence` only with these
+required fields, each supplied by the user:
+
+- `sourceReference`
+- `observationReferences`
+- `statement`
+- `role`
+- `evidenceType`
+- `confidence`
+
+If any required field is missing, do not invent it. Ask the user. A
+plain-text description alone is not a valid Source or Observation reference.
+Use the evidence ID SARP returns. If that call does not return an evidence
+ID, stop and ask the user.
 
 ## What `record_decision` stores
 
@@ -93,12 +103,16 @@ keeps the earlier decision and its lineage.
 Do not call `request_authorization` because a decision was recorded.
 
 Call `request_authorization` only when the user explicitly asks to request
-authorization for an action. Take these arguments from the user:
+authorization for an action. It requires these four fields:
 
+- `decisionReference`
 - `requestedAction`
 - `reason`
 - `requestedScope`
 
-When any of the three is missing, ask the user. Do not invent them. The
-request stays pending. Do not approve it. A created request is not
-authorization, execution, or a final decision.
+Use the exact Decision artifact ID returned by the successful record_decision or supersede_decision call as decisionReference. If no Decision artifact ID was returned, stop.
+
+Take `requestedAction`, `reason`, and `requestedScope` from the user. When
+any of them is missing, ask the user. Do not invent them. The request stays
+pending. Do not approve it. A created request is not authorization,
+execution, or a final decision.
