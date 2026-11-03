@@ -31,7 +31,7 @@ derived from the signed-in actor; never place access tokens, organization IDs,
 or tenant IDs in prompts or plugin configuration.
 
 See the [plugin guide](plugins/sarp-organizational-memory/README.md) for the
-public tools, example prompts, and verification steps.
+eight public tools, example prompts, and verification steps.
 
 ## Distribution boundary
 

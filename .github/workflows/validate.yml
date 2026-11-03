@@ -1,0 +1,56 @@
+name: Validate plugin
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate JSON
+        run: python3 .github/scripts/validate_json.py
+
+      - name: Lint skill frontmatter
+        run: python3 .github/scripts/lint_skill_frontmatter.py
+
+      - name: Install Claude Code CLI
+        id: cli
+        run: |
+          set +e
+          npm install --prefix "$RUNNER_TEMP/claude" @anthropic-ai/claude-code
+          status=$?
+          set -e
+          binary="$RUNNER_TEMP/claude/node_modules/.bin/claude"
+          if [ "$status" -eq 0 ] && [ -x "$binary" ]; then
+            echo "installed=true" >> "$GITHUB_OUTPUT"
+            echo "$RUNNER_TEMP/claude/node_modules/.bin" >> "$GITHUB_PATH"
+            "$binary" --version
+          else
+            echo "installed=false" >> "$GITHUB_OUTPUT"
+            echo "Claude Code CLI is not installable. Manifests will use the schema check."
+          fi
+
+      - name: Validate manifests with Claude Code
+        if: steps.cli.outputs.installed == 'true'
+        run: |
+          claude plugin validate . --strict
+          claude plugin validate plugins/sarp-organizational-memory --strict
+
+      - name: Validate manifests with schema check
+        if: steps.cli.outputs.installed != 'true'
+        run: python3 .github/scripts/validate_manifests.py

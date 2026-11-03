@@ -1,6 +1,6 @@
 ---
 name: record-organizational-decision
-description: Record or supersede a governed organizational decision in SARP. Use when the user asks to preserve a decision, replace a standing decision, or request human authorization for one.
+description: Record or supersede a governed organizational decision in SARP. Use when the user asks to preserve a decision, to replace one exact decision ID, or to request authorization for an action.
 ---
 
 # Record an organizational decision
@@ -18,44 +18,87 @@ Before any write:
    unresolved context separately. Cite the record IDs SARP returned.
 
 An empty recall means the readable projection returned no matching decision.
-It is not proof that no decision exists. Say that, then continue only if the
-user still wants a record created.
+It is not proof that no decision exists. Say that. A similar topic is not a
+reason to supersede a decision.
 
 Treat `potential-conflicts-only` and candidates without an explicit
 `contradicts` or `corrects` lineage edge as potential conflicts. Say
-"potentially conflicts" or "may conflict" in that case. Show the result to
-the user before writing. Continue with the write when the user still wants
-the decision preserved.
+"potentially conflicts" or "may conflict" in that case. Show that result to
+the user before writing.
 
-Prepare the decision from the user's request and from records SARP returned.
-Use this template. Leave a field empty when the user did not supply it and
-SARP did not return it:
+## Notes that are not stored
 
-- Context:
-- Options considered:
-- Decision:
-- Evidence:
-- Owner:
-- Review date:
+You may sort the conversation into these notes while preparing the call:
 
-Evidence is the explicit evidence references the user supplied or SARP
-returned. Do not fabricate source references. Use `record_evidence` only when
-the user explicitly asks to preserve supplied evidence.
+- Context
+- Options considered
+- Owner
+- Review date
 
-Then write through the matching tool:
+SARP does not store these as fields. Do not send them as their own arguments.
+Fold any of them into `rationale` only after the user agrees to that wording.
+Otherwise leave them out of the tool call.
 
-1. When the new decision replaces a standing decision, call
-   `supersede_decision`. Supersession keeps the earlier decision and its
-   lineage. Preserve that history. Do not overwrite or delete the earlier
-   decision.
-2. When no standing decision is being replaced, call `record_decision` and
-   include the explicit evidence references.
-3. Include the completed template in the decision you send. Pass only
-   arguments the tool accepts.
+## Evidence
 
-After the write, call `request_authorization`. That call creates a governance
-request. It does not approve the request. Stop there and wait for a person to
-approve it in SARP. Report the request as pending. A created request is not
+`evidenceReferences` must contain at least one existing evidence ID. When no
+evidence ID is available, stop. Ask the user for an existing evidence ID, or
+for permission to preserve evidence with `record_evidence`.
+
+Do not call `record_decision` or `supersede_decision` until
+`evidenceReferences` has at least one ID. Do not invent an evidence ID. Do not
+leave `evidenceReferences` empty.
+
+When the user gives permission, call `record_evidence` with only the evidence
+the user supplied. Use the evidence ID SARP returns. If that call does not
+return an evidence ID, stop and ask the user. Do not fabricate a source
+reference.
+
+## What `record_decision` stores
+
+Call `record_decision` with the stored arguments below. Take each required
+value from the user. Ask for any required value the user has not given. Do
+not invent one.
+
+- `decisionType`
+- `selectedOption`
+- `rationale`
+- `confidence`
+- `evidenceReferences`, with at least one evidence ID
+- `insightReferences`, optional
+- `goalReferences`, optional
+
+Include `insightReferences` or `goalReferences` only when the user supplies
+those identifiers. Omit the argument otherwise. Do not invent an insight ID
+or a goal ID.
+
+Leave organization IDs, tenant IDs, and access tokens out of the tool input.
+
+## Supersession
+
+Call `supersede_decision` only after both of these happen:
+
+1. Show the user the exact decision ID SARP returned.
+2. The user confirms that the new decision explicitly replaces that ID.
+
+Topic overlap is not that confirmation. Leave a similar standing decision in
+place until the user confirms that exact ID.
+
+Pass the confirmed decision ID and the same stored fields as
+`record_decision`, including a non-empty `evidenceReferences`. Supersession
+keeps the earlier decision and its lineage.
+
+## Authorization
+
+Do not call `request_authorization` because a decision was recorded.
+
+Call `request_authorization` only when the user explicitly asks to request
+authorization for an action. Take these arguments from the user:
+
+- `requestedAction`
+- `reason`
+- `requestedScope`
+
+When any of the three is missing, ask the user. Do not invent them. The
+request stays pending. Do not approve it. A created request is not
 authorization, execution, or a final decision.
-
-Leave access tokens, organization IDs, and tenant IDs out of tool inputs.

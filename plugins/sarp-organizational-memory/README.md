@@ -39,7 +39,7 @@ inputs deliberately expose neither `organizationId` nor `tenantId`.
 
 ## Public tools
 
-The plugin connects Claude to these public SARP tools:
+The plugin connects Claude to exactly these eight public tools:
 
 | Tool | Behavior |
 | --- | --- |
@@ -78,19 +78,17 @@ write directly to storage.
 
 ### 4. Record a decision
 
-> Record this decision in SARP. Fill in context, options considered, the
-> decision, evidence, owner, and review date. Recall standing decisions and
-> check contradictions first. If a standing decision already covers this
-> matter, supersede it so the earlier decision and its lineage stay in place.
-> Request authorization, then stop so a person can approve it.
+> Record this decision in SARP with decisionType, selectedOption, rationale,
+> confidence, and at least one existing evidence ID. Recall standing decisions
+> and check contradictions first. Supersede an earlier decision only if I
+> confirm that this decision replaces the exact decision ID you show me.
 
 ## Verify the installation
 
 In Claude Code:
 
 1. Run `/mcp` and confirm the SARP server is connected.
-2. Ask Claude to list the SARP tools and confirm the tools in the table above
-   are available.
+2. Ask Claude to list the SARP tools and confirm there are exactly eight.
 3. Run the recall prompt above against a topic your organization is allowed to
    read.
 4. Ask for a trace of one returned decision and verify that Claude calls out
